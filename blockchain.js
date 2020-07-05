@@ -1,5 +1,6 @@
 var createHash = require("crypto");
 var url = require("url");
+var axios = require("axios")["default"];
 var Block = /** @class */ (function () {
     function Block(index, timestamp, transactions, proof, previous_hash) {
         this._index = index;
@@ -153,18 +154,21 @@ var Blockchain = /** @class */ (function () {
         var tmp_length = 0;
         var max_length = this.chain.length;
         neighbours.forEach(function (node) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function () {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    var new_chain_1 = JSON.parse(xmlHttp.responseText);
-                    if (that.valid_chain(new_chain_1) && new_chain_1.length > max_length) {
-                        that._chain = new_chain_1;
-                        max_length = new_chain_1.length;
-                    }
-                }
-            };
-            xmlHttp.open("GET", node.origin + "/chain", true); // True for asynchronouse
-            xmlHttp.send(null);
+            axios.get(node.origin + "/chain").then(function (res) {
+                console.log(res.data);
+            });
+            // var xmlHttp = new XMLHttpRequest()
+            // xmlHttp.onreadystatechange = () => {
+            // 	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            // 		let new_chain = JSON.parse(xmlHttp.responseText)
+            // 		if (that.valid_chain(new_chain) && new_chain.length > max_length) {
+            // 			that._chain = new_chain
+            // 			max_length = new_chain.length
+            // 		}
+            // 	}
+            // }
+            // xmlHttp.open("GET", node.origin + "/chain", true) // True for asynchronouse
+            // xmlHttp.send(null)
         });
     };
     return Blockchain;

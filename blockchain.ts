@@ -1,5 +1,6 @@
 const createHash = require("crypto")
 const url = require("url")
+const axios = require("axios").default
 
 class Block {
 	private _index
@@ -156,18 +157,25 @@ class Blockchain {
 		let tmp_length = 0
 		let max_length = this.chain.length
 		neighbours.forEach((node: URL) => {
-			var xmlHttp = new XMLHttpRequest()
-			xmlHttp.onreadystatechange = () => {
-				if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-					let new_chain = JSON.parse(xmlHttp.responseText)
-					if (that.valid_chain(new_chain) && new_chain.length > max_length) {
-						that._chain = new_chain
-						max_length = new_chain.length
-					}
+			axios.get(node.origin + "/chain").then((res) => {
+				let new_chain = res.data
+				if (that.valid_chain(new_chain) && new_chain.length > max_length) {
+					that._chain = new_chain
+					max_length = new_chain.length
 				}
-			}
-			xmlHttp.open("GET", node.origin + "/chain", true) // True for asynchronouse
-			xmlHttp.send(null)
+			})
+			// var xmlHttp = new XMLHttpRequest()
+			// xmlHttp.onreadystatechange = () => {
+			// 	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			// 		let new_chain = JSON.parse(xmlHttp.responseText)
+			// 		if (that.valid_chain(new_chain) && new_chain.length > max_length) {
+			// 			that._chain = new_chain
+			// 			max_length = new_chain.length
+			// 		}
+			// 	}
+			// }
+			// xmlHttp.open("GET", node.origin + "/chain", true) // True for asynchronouse
+			// xmlHttp.send(null)
 		})
 	}
 }

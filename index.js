@@ -55,7 +55,7 @@ app.post("/nodes/register", function (req, res) {
 });
 app.get("/nodes/resolve", function (req, res) {
     var replaced = QuikChain.resolve_conflicts();
-    res.send(Blockchain);
+    res.send(QuikChain);
 });
 var myArgs = process.argv.slice(2)[0];
 console.log("Launching bitnode in port: ", myArgs);
