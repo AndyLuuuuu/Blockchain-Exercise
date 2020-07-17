@@ -127,7 +127,7 @@ var Blockchain = /** @class */ (function () {
         var guess = Buffer.from(proof.toString().toString("base64")) +
             Buffer.from(last_proof.toString()).toString("base64");
         var hash = createHash.createHash("sha256").update(guess).digest("base64");
-        return hash.startsWith("0000");
+        return hash.startsWith("00");
     };
     Blockchain.prototype.register_node = function (address) {
         var parsed_url = new URL(address);
@@ -155,7 +155,11 @@ var Blockchain = /** @class */ (function () {
         var max_length = this.chain.length;
         neighbours.forEach(function (node) {
             axios.get(node.origin + "/chain").then(function (res) {
-                console.log(res.data);
+                var new_chain = res.data;
+                if (that.valid_chain(new_chain) && new_chain.length > max_length) {
+                    that._chain = new_chain;
+                    max_length = new_chain.length;
+                }
             });
             // var xmlHttp = new XMLHttpRequest()
             // xmlHttp.onreadystatechange = () => {

@@ -127,7 +127,7 @@ class Blockchain {
 			Buffer.from(proof.toString().toString("base64")) +
 			Buffer.from(last_proof.toString()).toString("base64")
 		const hash = createHash.createHash("sha256").update(guess).digest("base64")
-		return hash.startsWith("0000")
+		return hash.startsWith("00")
 	}
 
 	public register_node(address) {
